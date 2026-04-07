@@ -11,6 +11,24 @@ cd d:\CypherGitHub\free-code
 .\cli.exe
 ```
 
+If you already created the global launcher command, you can start it from any PowerShell terminal with:
+
+```powershell
+cypherfree
+```
+
+This repository also includes launcher scripts at the project root:
+
+```powershell
+.\cypherfree.ps1
+```
+
+or:
+
+```powershell
+.\cypherfree.cmd
+```
+
 If `cli.exe` is missing, build it first with Bun, then run it:
 
 ```powershell
@@ -25,14 +43,18 @@ Set your MiniMax Anthropic-compatible endpoint and API key in the current PowerS
 ```powershell
 $env:ANTHROPIC_BASE_URL="https://api.minimaxi.com/anthropic"
 $env:ANTHROPIC_API_KEY="your_minimax_api_key"
+$env:ANTHROPIC_AUTH_TOKEN=$env:ANTHROPIC_API_KEY
 .\cli.exe
 ```
 
 Notes:
 
 - When using MiniMax this way, the app is authenticated by `ANTHROPIC_API_KEY`, not by Claude account OAuth.
+- MiniMax may require the key in the `Authorization` header, so setting `ANTHROPIC_AUTH_TOKEN` to the same value helps avoid `401 authentication_error`.
 - You normally do not need `/login` just to use MiniMax for regular chat/completions.
 - Some built-in UI messages or Claude.ai-specific features may still mention Claude login, because this project is a fork of Claude Code.
+- If you installed the `cypherfree` launcher, it can auto-apply the MiniMax base URL and mirror `ANTHROPIC_API_KEY` into `ANTHROPIC_AUTH_TOKEN` before launching.
+- The repository-level `cypherfree.ps1` and `cypherfree.cmd` scripts do the same thing and are safe to commit with your local setup docs.
 
 ---
 
