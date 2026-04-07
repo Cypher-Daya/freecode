@@ -1,3 +1,42 @@
+## Local Quick Start (Windows / MiniMax)
+
+If you are running this repo locally on Windows and want to use the MiniMax Anthropic-compatible API, use the steps below first.
+
+### Start the program
+
+This repo already contains a compiled Windows binary in many local setups, so you can usually start it directly from PowerShell:
+
+```powershell
+cd d:\CypherGitHub\free-code
+.\cli.exe
+```
+
+If `cli.exe` is missing, build it first with Bun, then run it:
+
+```powershell
+bun run build
+.\cli.exe
+```
+
+### Connect MiniMax API
+
+Set your MiniMax Anthropic-compatible endpoint and API key in the current PowerShell session before launching:
+
+```powershell
+$env:ANTHROPIC_BASE_URL="https://api.minimaxi.com/anthropic"
+$env:ANTHROPIC_API_KEY="your_minimax_api_key"
+.\cli.exe
+```
+
+Notes:
+
+- When using MiniMax this way, the app is authenticated by `ANTHROPIC_API_KEY`, not by Claude account OAuth.
+- You normally do not need `/login` just to use MiniMax for regular chat/completions.
+- Some built-in UI messages or Claude.ai-specific features may still mention Claude login, because this project is a fork of Claude Code.
+
+---
+
+# for cypher own use
 <p align="center">
   <img src="assets/screenshot.png" alt="free-code" width="720" />
 </p>
