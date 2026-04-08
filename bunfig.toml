@@ -1,0 +1,9 @@
+[install]
+# Auto-install peer dependencies
+auto = "fallback"
+
+[install.scopes]
+
+[resolve]
+# Map .js extensions in imports to actual .ts/.tsx files
+extensions = [".ts", ".tsx", ".js", ".jsx", ".mts", ".mtsx"]
