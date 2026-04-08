@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # free-code installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/paoloanzn/free-code/main/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/Cypher-Daya/freecode/main/install.sh | bash
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -12,7 +12,7 @@ BOLD='\033[1m'
 DIM='\033[2m'
 RESET='\033[0m'
 
-REPO="https://github.com/paoloanzn/free-code.git"
+REPO="https://github.com/Cypher-Daya/freecode.git"
 INSTALL_DIR="$HOME/free-code"
 BUN_MIN_VERSION="1.3.11"
 
@@ -23,131 +23,105 @@ fail()  { printf "${RED}[x]${RESET} %s\n" "$*"; exit 1; }
 
 header() {
   echo ""
-  printf "${BOLD}${CYAN}"
-  cat << 'ART'
-   ___                            _
-  / _|_ __ ___  ___        ___ __| | ___
- | |_| '__/ _ \/ _ \_____ / __/ _` |/ _ \
- |  _| | |  __/  __/_____| (_| (_| |  __/
- |_| |_|  \___|\___|      \___\__,_|\___|
-
-ART
-  printf "${RESET}"
-  printf "${DIM}  The free build of Claude Code${RESET}\n"
+  printf "${BOLD}${CYAN}  free-code${RESET}\n"
+  printf "${DIM}  Claude Code 自由构建版${RESET}\n"
   echo ""
 }
 
-# -------------------------------------------------------------------
-# System checks
-# -------------------------------------------------------------------
+version_gte() {
+  [ "$(printf '%s\n' "$1" "$2" | sort -V | head -1)" = "$2" ]
+}
 
 check_os() {
   case "$(uname -s)" in
     Darwin) OS="macos" ;;
     Linux)  OS="linux" ;;
-    *)      fail "Unsupported OS: $(uname -s). macOS or Linux required." ;;
+    *)      fail "不支持的操作系统: $(uname -s)，仅支持 macOS 或 Linux" ;;
   esac
-  ok "OS: $(uname -s) $(uname -m)"
+  ok "系统: $(uname -s) $(uname -m)"
 }
 
 check_git() {
   if ! command -v git &>/dev/null; then
-    fail "git is not installed. Install it first:
+    fail "git 未安装。请先安装:
     macOS:  xcode-select --install
-    Linux:  sudo apt install git  (or your distro's equivalent)"
+    Linux:  sudo apt install git"
   fi
   ok "git: $(git --version | head -1)"
 }
 
-# Compare semver: returns 0 if $1 >= $2
-version_gte() {
-  [ "$(printf '%s\n' "$1" "$2" | sort -V | head -1)" = "$2" ]
-}
-
 check_bun() {
   if command -v bun &>/dev/null; then
-    local ver
     ver="$(bun --version 2>/dev/null || echo "0.0.0")"
     if version_gte "$ver" "$BUN_MIN_VERSION"; then
       ok "bun: v${ver}"
       return
     fi
-    warn "bun v${ver} found but v${BUN_MIN_VERSION}+ required. Upgrading..."
+    warn "bun v${ver} 版本太低，需要 v${BUN_MIN_VERSION}+，正在升级..."
   else
-    info "bun not found. Installing..."
+    info "bun 未安装，正在安装..."
   fi
   install_bun
 }
 
 install_bun() {
   curl -fsSL https://bun.sh/install | bash
-  # Source the updated profile so bun is on PATH for this session
   export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
   export PATH="$BUN_INSTALL/bin:$PATH"
   if ! command -v bun &>/dev/null; then
-    fail "bun installation succeeded but binary not found on PATH.
-    Add this to your shell profile and restart:
-      export PATH=\"\$HOME/.bun/bin:\$PATH\""
+    fail "bun 安装成功但找不到命令。
+请把以下内容添加到你的 shell 配置文件 (~/.bashrc, ~/.zshrc 等):
+  export PATH=\"\$HOME/.bun/bin:\$PATH\""
   fi
-  ok "bun: v$(bun --version) (just installed)"
+  ok "bun: v$(bun --version) (刚刚安装)"
 }
-
-# -------------------------------------------------------------------
-# Clone & build
-# -------------------------------------------------------------------
 
 clone_repo() {
   if [ -d "$INSTALL_DIR" ]; then
-    warn "$INSTALL_DIR already exists"
-    if [ -d "$INSTALL_DIR/.git" ]; then
-      info "Pulling latest changes..."
-      git -C "$INSTALL_DIR" pull --ff-only origin main 2>/dev/null || {
-        warn "Pull failed, continuing with existing copy"
-      }
-    fi
+    warn "$INSTALL_DIR 已存在"
+    info "正在拉取最新代码..."
+    git -C "$INSTALL_DIR" pull --ff-only origin master 2>/dev/null || {
+      warn "拉取失败，使用现有代码"
+    }
   else
-    info "Cloning repository..."
-    git clone --depth 1 "$REPO" "$INSTALL_DIR"
+    info "正在克隆仓库..."
+    git clone "$REPO" "$INSTALL_DIR"
   fi
-  ok "Source: $INSTALL_DIR"
+  ok "源码位置: $INSTALL_DIR"
 }
 
 install_deps() {
-  info "Installing dependencies..."
+  info "正在安装依赖..."
   cd "$INSTALL_DIR"
-  bun install --frozen-lockfile 2>/dev/null || bun install
-  ok "Dependencies installed"
+  bun install
+  ok "依赖安装完成"
 }
 
 build_binary() {
-  info "Building free-code (all experimental features enabled)..."
+  info "正在编译..."
   cd "$INSTALL_DIR"
-  bun run build:dev:full
-  ok "Binary built: $INSTALL_DIR/cli-dev"
+  bun run build
+  ok "编译完成: $INSTALL_DIR/cli"
 }
 
 link_binary() {
   local link_dir="$HOME/.local/bin"
   mkdir -p "$link_dir"
 
-  ln -sf "$INSTALL_DIR/cli-dev" "$link_dir/free-code"
-  ok "Symlinked: $link_dir/free-code"
+  ln -sf "$INSTALL_DIR/cli" "$link_dir/free-code"
+  ok "已创建快捷命令: $link_dir/free-code"
 
   if ! echo "$PATH" | tr ':' '\n' | grep -qx "$link_dir"; then
-    warn "$link_dir is not on your PATH"
+    warn "$link_dir 不在 PATH 中"
     echo ""
-    printf "${YELLOW}  Add this to your shell profile (~/.bashrc, ~/.zshrc, etc.):${RESET}\n"
-    printf "${BOLD}    export PATH=\"\$HOME/.local/bin:\$PATH\"${RESET}\n"
+    printf "  请把以下内容添加到你的 shell 配置文件 (~/.bashrc, ~/.zshrc 等):\n"
+    printf "    export PATH=\"\$HOME/.local/bin:\$PATH\"\n"
     echo ""
   fi
 }
 
-# -------------------------------------------------------------------
-# Main
-# -------------------------------------------------------------------
-
 header
-info "Starting installation..."
+info "开始安装..."
 echo ""
 
 check_os
@@ -161,19 +135,16 @@ build_binary
 link_binary
 
 echo ""
-printf "${GREEN}${BOLD}  Installation complete!${RESET}\n"
+printf "${GREEN}${BOLD}  安装完成！${RESET}\n"
 echo ""
-printf "  ${BOLD}Run it:${RESET}\n"
-printf "    ${CYAN}free-code${RESET}                          # interactive REPL\n"
-printf "    ${CYAN}free-code -p \"your prompt\"${RESET}          # one-shot mode\n"
+printf "  ${BOLD}运行命令:${RESET}\n"
+printf "    free-code                          # 交互模式\n"
+printf "    free-code -p \"你的问题\"             # 单次提问\n"
 echo ""
-printf "  ${BOLD}Set your API key:${RESET}\n"
-printf "    ${CYAN}export ANTHROPIC_API_KEY=\"sk-ant-...\"${RESET}\n"
+printf "  ${BOLD}设置 API Key:${RESET}\n"
+printf "    export ANTHROPIC_API_KEY=\"your_key\"\n"
+printf "    export ANTHROPIC_BASE_URL=\"https://api.minimaxi.com/anthropic\"\n"
 echo ""
-printf "  ${BOLD}Or log in with Claude.ai:${RESET}\n"
-printf "    ${CYAN}free-code /login${RESET}\n"
-echo ""
-printf "  ${DIM}Source: $INSTALL_DIR${RESET}\n"
-printf "  ${DIM}Binary: $INSTALL_DIR/cli-dev${RESET}\n"
-printf "  ${DIM}Link:   ~/.local/bin/free-code${RESET}\n"
+printf "  ${DIM}源码: $INSTALL_DIR${RESET}\n"
+printf "  ${DIM}程序: $INSTALL_DIR/cli${RESET}\n"
 echo ""
