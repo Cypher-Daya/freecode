@@ -35,35 +35,30 @@ bun install
 
 # 3. 编译
 bun run build
-
-# 4. 运行
-./cli
 ```
 
 ---
 
-## 一键安装（Linux / macOS）
+## 一键启动（cypherfree）
+
+编译完成后，用 `cypherfree` 脚本一键启动。
+
+**首次使用：编辑脚本，填入你的 API Key**
+
+```bash
+# 编辑 cypherfree 脚本，把 YOUR_API_KEY 换成你的 MiniMax API Key
+nano cypherfree
+
+# 以后每次启动只需
+./cypherfree
+```
+
+---
+
+## 一键安装 + 一键启动（Linux / macOS）
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Cypher-Daya/freecode/main/install.sh | bash
-```
-
----
-
-## 使用方法
-
-```bash
-# 设置 API Key（使用第三方 API 如 MiniMax）
-$env:ANTHROPIC_API_KEY="your_api_key"           # Windows PowerShell
-$env:ANTHROPIC_BASE_URL="https://api.minimaxi.com/anthropic"  # Windows
-export ANTHROPIC_API_KEY="your_api_key"          # Linux/macOS
-export ANTHROPIC_BASE_URL="https://api.minimaxi.com/anthropic"  # Linux/macOS
-
-# 或者用 OAuth 登录
-./cli /login
-
-# 运行
-./cli
 ```
 
 ---
