@@ -1,5 +1,5 @@
 #!/bin/bash
-export ANTHROPIC_API_KEY="你的minimax_api_key"
+export ANTHROPIC_API_KEY="sk-cp-DvKsuHLJzaiUm7DylrsXdcCLH_VLPyGQEBb6nt8TNzRQSBzeOg2zTqwB-jeXy5Irn0P8JoaJD4ikVkCibR5eArFdIlAfd3TTUhpZigU24TUNsE4GjkkV5z8"
 export ANTHROPIC_BASE_URL="https://api.minimaxi.com/anthropic"
 export ANTHROPIC_AUTH_TOKEN=$ANTHROPIC_API_KEY
 ./cli
