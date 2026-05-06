@@ -1,12 +1,15 @@
-$env:ANTHROPIC_BASE_URL = if ($env:ANTHROPIC_BASE_URL) {
-  $env:ANTHROPIC_BASE_URL
-} else {
-  'https://api.minimaxi.com/anthropic'
-}
-
-if (-not $env:ANTHROPIC_AUTH_TOKEN -and $env:ANTHROPIC_API_KEY) {
+if ($env:ANTHROPIC_API_KEY) {
   $env:ANTHROPIC_AUTH_TOKEN = $env:ANTHROPIC_API_KEY
 }
+
+$env:ANTHROPIC_BASE_URL = 'https://api.minimaxi.com/anthropic'
+$env:ANTHROPIC_MODEL = 'MiniMax-M2.7-highspeed'
+$env:ANTHROPIC_SMALL_FAST_MODEL = 'MiniMax-M2.7-highspeed'
+$env:ANTHROPIC_DEFAULT_SONNET_MODEL = 'MiniMax-M2.7-highspeed'
+$env:ANTHROPIC_DEFAULT_OPUS_MODEL = 'MiniMax-M2.7-highspeed'
+$env:ANTHROPIC_DEFAULT_HAIKU_MODEL = 'MiniMax-M2.7-highspeed'
+$env:API_TIMEOUT_MS = '3000000'
+$env:CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = '1'
 
 $freeCodeExe = Join-Path $PSScriptRoot 'cli.exe'
 

@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"D:/CypherGitHub/free-code/install.sh\":*)",
+      "Bash(sed -i 's|ananthropic|anthropic|g' install.sh)",
+      "Bash(chmod +x install.sh)",
+      "Bash(\"D:/CypherGitHub/free-code/.gitignore\":*)",
+      "Bash(\"D:/CypherGitHub/free-code/start.sh\":*)",
+      "Bash(chmod +x \"D:/CypherGitHub/free-code/start.sh\")",
+      "Bash(gh repo:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(curl:*)",
+      "Bash(git ls-remote:*)",
+      "Bash(grep -rn login D:/CypherGitHub/free-code/src/ --include=*.ts --include=*.tsx -l)",
+      "Bash(grep -r \"ANTHROPIC_API_KEY\\\\|oauth\\\\|login\\\\|api.key\\\\|config\" src/ --include=*.ts -l)",
+      "Bash(grep -r \"ANTHROPIC_API_KEY\\\\|oauth\\\\|login\\\\|api.key\" src/ --include=*.ts -l)",
+      "Bash(grep -rn login /d/CypherGitHub/free-code/src/ --include=*.ts --include=*.tsx)",
+      "Bash(grep -n \"ANTHROPIC_BASE_URL\\\\|BASE_URL\\\\|baseUrl\\\\|minimax\" /d/CypherGitHub/free-code/src/ --include=*.ts --include=*.tsx -r)",
+      "Bash(grep -n \"ANTHROPIC_BASE_URL\\\\|BASE_URL\\\\|baseUrl\" /d/CypherGitHub/free-code/src/ --include=*.ts --include=*.tsx -r)",
+      "Bash(grep -rn \"HTTPS_PROXY\\\\|https_proxy\\\\|HTTP_PROXY\\\\|http_proxy\\\\|NO_PROXY\" /d/CypherGitHub/free-code/src/ --include=*.ts --include=*.tsx)",
+      "Bash(grep -rn \"device.*code\\\\|DeviceCode\\\\|device_code\" /d/CypherGitHub/free-code/src/ --include=*.ts --include=*.tsx)",
+      "Bash(grep -rn \"device\\\\|Device\" /d/CypherGitHub/free-code/src/screens/ --include=*.ts --include=*.tsx)",
+      "Bash(xargs grep:*)"
+    ]
+  }
+}
